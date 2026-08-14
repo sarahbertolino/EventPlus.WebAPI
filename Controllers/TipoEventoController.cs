@@ -23,7 +23,7 @@ namespace EventPlus.WebAPI.Controllers
             try // se der certo, o try já é suficiente
             {
                 var tipos = await _tipoEvento.Listar();
-                return Ok(tipos);s
+                return Ok(tipos);
             }
             catch (Exception e) //se der errado, ñ vai quebrar o código, só vai retornar do erro
             {

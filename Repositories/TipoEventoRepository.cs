@@ -24,9 +24,10 @@ namespace EventPlus.WebAPI.Repositories
             throw new NotImplementedException();
         }
 
-        public Task Cadastrar(TipoEvento tipoEvento)
+        public async Task Cadastrar(TipoEvento tipoEvento)
         {
-            throw new NotImplementedException();
+            await _context.TipoEvento.AddAsync(tipoEvento);
+            await _context.SaveChangesAsync();
         }
 
         public Task Deletar(Guid id)
