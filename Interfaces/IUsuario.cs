@@ -6,7 +6,7 @@ namespace EventPlus.WebAPI.Interfaces
     {
         Task Cadastrar(Usuario usuario);
 
-        Task Atualizar(Guid id, Usuario novoUsuario);
+        Task Atualizar(Guid id, Usuario usuario);
 
         Task Deletar(Guid id);
 

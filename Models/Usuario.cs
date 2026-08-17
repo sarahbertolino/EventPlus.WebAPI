@@ -12,7 +12,7 @@ public partial class Usuario
     [Key]
     public Guid IdUsuario { get; set; }
 
-    public Guid IdTipoUsuario { get; set; }
+    public Guid? IdTipoUsuario { get; set; }
 
     [StringLength(250)]
     [Unicode(false)]
