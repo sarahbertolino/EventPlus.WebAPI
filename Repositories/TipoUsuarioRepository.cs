@@ -24,7 +24,7 @@ namespace EventPlus.WebAPI.Repositories
                 await _context.SaveChangesAsync();
             }
         }
-
+        // uau
         public async Task<TipoUsuario?> BuscarPorId(Guid id)
         {
             return await _context.TipoUsuario.FirstOrDefaultAsync(t => t.IdTipoUsuario == id);
