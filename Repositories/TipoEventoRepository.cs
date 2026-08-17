@@ -14,14 +14,24 @@ namespace EventPlus.WebAPI.Repositories
             _context = context;
         }
       
-        public Task Atualizar(Guid id, TipoEvento tipoEvento)
+        public async Task Atualizar(Guid id, TipoEvento tipoEvento)
         {
-            throw new NotImplementedException();
+            // variavel que guarda o resultado da busca que queremos trocar
+            // o objeto que veio da requisição/ do parâmetro recebendo um novo valor
+            var tipoEventoBuscado = await
+                _context.TipoEvento.FindAsync(id); // vem do Guid
+            if (tipoEventoBuscado != null) // null ou objeto encontrado
+            {   
+                
+                tipoEventoBuscado.Titulo = tipoEvento.Titulo; // substituir  o titulo do objeto buscado pelo titulo do novo objeto
+                _context.TipoEvento.Update(tipoEventoBuscado);
+                await _context.SaveChangesAsync();
+            }
         }
 
-        public Task<TipoEvento?> BuscarPorId(Guid id)
+        public async Task<TipoEvento?> BuscarPorId(Guid id)
         {
-            throw new NotImplementedException();
+            return await _context.TipoEvento.FirstOrDefaultAsync(t => t.IdTipoEvento == id);
         }
 
         public async Task Cadastrar(TipoEvento tipoEvento)
@@ -30,9 +40,15 @@ namespace EventPlus.WebAPI.Repositories
             await _context.SaveChangesAsync();
         }
 
-        public Task Deletar(Guid id)
+        public async Task Deletar(Guid id)
         {
-            throw new NotImplementedException();
+            var tipoEventoBuscado = await
+            _context.TipoEvento.FindAsync(id);
+            if (tipoEventoBuscado != null)
+            {
+                _context.TipoEvento.Remove(tipoEventoBuscado);
+                await _context.SaveChangesAsync();
+            }
         }
 
         public async Task<List<TipoEvento>> Listar()
