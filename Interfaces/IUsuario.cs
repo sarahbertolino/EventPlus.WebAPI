@@ -10,7 +10,7 @@ namespace EventPlus.WebAPI.Interfaces
 
         Task Deletar(Guid id);
 
-        Task<IEnumerable<Usuario>> Listar();
+        Task<List<Usuario>> Listar();
 
         Task<Usuario?> BuscarPorId(Guid id);
 

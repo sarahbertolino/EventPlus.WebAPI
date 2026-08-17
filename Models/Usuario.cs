@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 using Microsoft.EntityFrameworkCore;
 
 namespace EventPlus.WebAPI.Models;
@@ -24,6 +25,7 @@ public partial class Usuario
 
     [StringLength(60)]
     [Unicode(false)]
+    [JsonIgnore] //nunca seria
     public string Senha { get; set; } = null!;
 
     [InverseProperty("IdUsuarioNavigation")]
@@ -35,4 +37,9 @@ public partial class Usuario
 
     [InverseProperty("IdUsuarioNavigation")]
     public virtual ICollection<Presenca> Presenca { get; set; } = new List<Presenca>();
+
+    internal static async Task Deletar(Guid id)
+    {
+        throw new NotImplementedException();
+    }
 }

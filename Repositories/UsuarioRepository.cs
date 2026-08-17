@@ -2,6 +2,7 @@
 using EventPlus.WebAPI.Interfaces;
 using EventPlus.WebAPI.Models;
 using EventPlus.WebAPI.Utils;
+using Microsoft.EntityFrameworkCore;
 
 namespace EventPlus.WebAPI.Repositories
 {
@@ -13,19 +14,61 @@ namespace EventPlus.WebAPI.Repositories
         {
             _context = context;
         }
-        public Task Atualizar(Guid id, Usuario usuario)
+        public async Task Deletar(Guid id)
         {
-            throw new NotImplementedException();
+            var UsuarioBuscado = await
+            _context.Usuario.FindAsync(id);
+            if (UsuarioBuscado != null)
+            {
+                _context.Usuario.Remove(UsuarioBuscado);
+                await _context.SaveChangesAsync();
+            }
+        }
+        public async Task Atualizar(Guid id, Usuario usuario)
+        {
+            var UsuarioBuscado = await _context.Usuario.FindAsync(id); // vem do Guid
+            if (UsuarioBuscado != null) // null ou objeto encontrado
+            {
+
+                UsuarioBuscado.Nome = usuario.Nome; // substituir  o titulo do objeto buscado pelo titulo do novo objeto
+                UsuarioBuscado.Email = usuario.Email;
+                UsuarioBuscado.IdTipoUsuario = usuario.IdTipoUsuario;
+
+                if (!string.IsNullOrEmpty(usuario.Senha))
+                {
+                    UsuarioBuscado.Senha = Criptografia.GerarHash(usuario.Senha);
+                }
+
+                _context.Usuario.Update(UsuarioBuscado);
+                await _context.SaveChangesAsync();
+            }
+
+             
         }
 
-        public Task<Usuario?> BuscarPorEmailESenha(string email, string senha)
+        public async Task<Usuario?> BuscarPorEmailESenha(string email, string senha)
         {
-            throw new NotImplementedException();
+            var usuario = await _context.Usuario
+                .Include(u => u.IdTipoUsuarioNavigation)
+                .FirstAsync(u => u.Email == email);
+            if (usuario == null)
+            {
+                return null;
+            }
+
+            // verifica se a senha digitada corresponde ao hash salvo no banco
+            bool senhaValida = Criptografia.CompararHash(senha, usuario.Senha);
+
+            if (!senhaValida)
+            {
+                return null;
+            }
+            return usuario;
         }
 
-        public Task<Usuario?> BuscarPorId(Guid id)
+        public async Task<Usuario?> BuscarPorId(Guid id)
         {
-            throw new NotImplementedException();
+            return await _context.Usuario.FirstOrDefaultAsync(t => t.IdUsuario == id);
         }
 
         public async Task Cadastrar(Usuario usuario)
@@ -38,14 +81,17 @@ namespace EventPlus.WebAPI.Repositories
             await _context.SaveChangesAsync();
         }
 
-        public Task Deletar(Guid id)
+
+        public async Task<List<Usuario>> Listar()
         {
-            throw new NotImplementedException();
+            //return await _context.Usuario.AsNoTracking().ToListAsync();
+
+            return await _context.Usuario
+                .Include(u => u.IdTipoUsuarioNavigation)
+                .AsNoTracking()
+                .ToListAsync();
+
         }
 
-        public Task<IEnumerable<Usuario>> Listar()
-        {
-            throw new NotImplementedException();
-        }
     }
 }
