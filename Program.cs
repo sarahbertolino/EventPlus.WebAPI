@@ -1,6 +1,7 @@
 using EventPlus.WebAPI.BdContextEvent;
 using EventPlus.WebAPI.Interfaces;
 using EventPlus.WebAPI.Repositories;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using System.Text.Json.Serialization;
 
@@ -23,6 +24,16 @@ builder.Services.AddScoped<ITipoUsuario, TipoUsuarioRepository>();
 builder.Services.AddScoped<ITipoEvento, TipoEventoRepository>();
 
 builder.Services.AddScoped<IUsuario, UsuarioRepository>();
+
+//Autenticação JWT
+//Configura como a API vai validar os tokens recebidos nas requisições
+builder.Services.AddAuthentication(options => {
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme
+    }
+    );
+
+
+
 
 var app = builder.Build();
 
